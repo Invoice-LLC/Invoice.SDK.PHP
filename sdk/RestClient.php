@@ -27,7 +27,7 @@ class RestClient
     {
         $request = $this->url . $request_type;
         $auth = base64_encode($this->login . ":" . $this->apiKey);
-
+        echo $auth;
         $ch = curl_init($request);
         curl_setopt($ch, CURLOPT_URL, $request);
         curl_setopt($ch, CURLOPT_POST, 1);

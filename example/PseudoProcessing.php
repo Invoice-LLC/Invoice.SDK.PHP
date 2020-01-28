@@ -52,6 +52,8 @@ class PseudoProcessing
         $settings = new SETTINGS();
         $settings->terminal_id = $this->terminalInfo->id;
 
+        $create_payment->settings = $settings;
+
         $this->paymentInfo = $this->restClient->CreatePayment($create_payment);
 
         if($this->paymentInfo == null or $this->paymentInfo->id == null)
