@@ -6,6 +6,7 @@ require_once "../sdk/CREATE_PAYMENT.php";
 require_once "../sdk/CREATE_REFUND.php";
 require_once "../sdk/CLOSE_PAYMENT.php";
 require_once "../sdk/common/ITEM.php";
+require_once "../sdk/common/SETTINGS.php";
 
 class PseudoProcessing
 {
