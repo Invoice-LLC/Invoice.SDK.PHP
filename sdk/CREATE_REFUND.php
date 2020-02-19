@@ -16,4 +16,15 @@ class CREATE_REFUND
      */
     public $receipt;
 
+    /**
+     * CREATE_REFUND constructor.
+     * @param $id string
+     * @param $refund REFUND_INFO
+     */
+    public function __construct($id, $refund)
+    {
+        $this->id = $id;
+        $this->refund = $refund;
+    }
+
 }

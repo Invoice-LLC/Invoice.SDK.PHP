@@ -17,4 +17,14 @@ class REFUND_INFO
      */
     public $reason;
 
+    /**
+     * REFUND_INFO constructor.
+     * @param $amount string
+     * @param $reason string
+     */
+    public function __construct($amount, $reason)
+    {
+        $this->amount = $amount;
+        $this->reason = $reason;
+    }
 }

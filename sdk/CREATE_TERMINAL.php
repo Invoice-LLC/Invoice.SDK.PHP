@@ -27,4 +27,15 @@ class CREATE_TERMINAL
      * @var boolean
      */
     public $canComments;
+
+    /**
+     * CREATE_TERMINAL constructor.
+     * @param $name string
+     * @param $type string
+     */
+    public function __construct($name, $type)
+    {
+        $this->name = $name;
+        $this->type = $type;
+    }
 }

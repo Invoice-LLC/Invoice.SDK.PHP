@@ -1,25 +1,20 @@
 <?php
 require_once "PseudoProcessing.php";
 
-$action = $_GET['action'];
+$action = @$_GET['action'];
+
+if(!isset($action)) {
+    die();
+}
 
 $processing = new PseudoProcessing();
 
 $processing->init("demo","1526fec01b5d11f4df4f2160627ce351","1:1");
 
-$item1 = new ITEM();
-$item1->name = "Суп";
-$item1->price = 10;
-$item1->discount = 0;
-$item1->quantity = 2;
-$item1->resultPrice = 20;
+$item1 = new ITEM("Суп",10,2,20);
 
-$item2 = new ITEM();
-$item2->name = "Кефир";
-$item2->price = 1000;
+$item2 = new ITEM("Кефир", 1000, 1, 990);
 $item2->discount = 10;
-$item2->quantity = 1;
-$item2->resultPrice = 990;
 
 $items = [
     $item1,
@@ -28,7 +23,7 @@ $items = [
 
 switch ($action) {
     case "pay":
-        $pay = $processing->onPay($items);
+        $pay = $processing->onPay($items, 2000);
 
         if($pay)
         {
@@ -56,7 +51,7 @@ switch ($action) {
             break;
 
         $refund = $processing->onRefund($_GET['id'] ,$items, "Муха в супе",20);
-
+        
         if($refund) {
             echo "Возврат оформлен";
         }else {

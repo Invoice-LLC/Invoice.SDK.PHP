@@ -6,6 +6,10 @@ require_once "../sdk/CREATE_PAYMENT.php";
 require_once "../sdk/CREATE_REFUND.php";
 require_once "../sdk/CLOSE_PAYMENT.php";
 require_once "../sdk/common/ITEM.php";
+require_once "../sdk/common/SETTINGS.php";
+require_once "../sdk/common/ORDER.php";
+require_once "../sdk/common/REFUND_INFO.php";
+require_once "../sdk/GET_PAYMENT.php";
 
 class PseudoProcessing
 {
@@ -29,12 +33,10 @@ class PseudoProcessing
             $this->terminalInfo = $this->restClient->GetTerminal($get_terminal);
             if($this->terminalInfo or $this->terminalInfo->id == null)
             {
-                $create_terminal = new CREATE_TERMINAL();
+                $create_terminal = new CREATE_TERMINAL(self::shopName,self::terminalType);
 
                 $create_terminal->alias = $alias;
-                $create_terminal->name = self::shopName;
                 $create_terminal->description = self::shopDescription;
-                $create_terminal->type = self::terminalType;
                 $create_terminal->defaultPrice = self::defaultPrice;
 
                 $this->restClient->CreateTerminal($create_terminal);
@@ -43,17 +45,12 @@ class PseudoProcessing
         }
     }
 
-    public function onPay(array $items)
+    public function onPay(array $items, $amount)
     {
-        $create_payment = new CREATE_PAYMENT();
+        $settings = new SETTINGS($this->terminalInfo->id);
+        $order = new ORDER($amount);
 
-        $create_payment->receipt = $items;
-
-        $settings = new SETTINGS();
-        $settings->terminal_id = $this->terminalInfo->id;
-
-        $create_payment->settings = $settings;
-
+        $create_payment = new CREATE_PAYMENT($order, $settings,$items);
         $this->paymentInfo = $this->restClient->CreatePayment($create_payment);
 
         if($this->paymentInfo == null or $this->paymentInfo->id == null)
@@ -74,14 +71,12 @@ class PseudoProcessing
 
     public function onRefund($orderID, array $items, string $reason, int $amount)
     {
-        $create_refund = new CREATE_REFUND();
-        $create_refund->receipt = $items;
-        $create_refund->id = $orderID;
-
-        $refund_info = new REFUND_INFO();
+        $refund_info = new REFUND_INFO($amount, $reason);
         $refund_info->reason = $reason;
         $refund_info->amount = $amount;
 
+        $create_refund = new CREATE_REFUND($orderID,$refund_info);
+        $create_refund->receipt = $items;
         $create_refund->refund = $refund_info;
 
         $this->refundInfo = $this->restClient->CreateRefund($create_refund);
