@@ -27,7 +27,7 @@ switch ($action) {
 
         if($pay)
         {
-            echo "Платеж оформлен: ".$processing->getPayment()->id;
+            echo "Платеж оформлен: https://pay.invoice.su/P".$processing->getPayment()->id;
         } else {
             echo "Ошибка платежа";
         }
@@ -51,7 +51,7 @@ switch ($action) {
             break;
 
         $refund = $processing->onRefund($_GET['id'] ,$items, "Муха в супе",20);
-        
+
         if($refund) {
             echo "Возврат оформлен";
         }else {
