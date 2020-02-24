@@ -9,7 +9,7 @@ if(!isset($action)) {
 
 $processing = new PseudoProcessing();
 
-$processing->init("demo","1526fec01b5d11f4df4f2160627ce351","1:1");
+$processing->init("demo","1526fec01b5d11f4df4f2160627ce351");
 
 $item1 = new ITEM("Суп",10,2,20);
 

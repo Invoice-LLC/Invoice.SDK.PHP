@@ -23,25 +23,18 @@ class PseudoProcessing
     private $terminalInfo;
     private $refundInfo;
 
-    public function init($login, $apiKey, $alias)
+    public function init($login, $apiKey)
     {
         if($this->terminalInfo == null)
         {
             $this->restClient = new RestClient($login, $apiKey);
-            $get_terminal = new GET_TERMINAL($alias);
 
-            $this->terminalInfo = $this->restClient->GetTerminal($get_terminal);
-            if($this->terminalInfo or $this->terminalInfo->id == null)
-            {
-                $create_terminal = new CREATE_TERMINAL(self::shopName,self::terminalType);
+            $create_terminal = new CREATE_TERMINAL(self::shopName,self::terminalType);
 
-                $create_terminal->alias = $alias;
-                $create_terminal->description = self::shopDescription;
-                $create_terminal->defaultPrice = self::defaultPrice;
+            $create_terminal->description = self::shopDescription;
+            $create_terminal->defaultPrice = self::defaultPrice;
 
-                $this->restClient->CreateTerminal($create_terminal);
-            }
-
+            $this->restClient->CreateTerminal($create_terminal);
         }
     }
 
