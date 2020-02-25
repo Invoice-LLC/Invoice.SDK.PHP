@@ -13,37 +13,78 @@ require_once "../sdk/GET_PAYMENT.php";
 
 class PseudoProcessing
 {
-    const shopName = "Название магазина";
-    const shopDescription = "Описание магазина";
+    public $shopName = "Название магазина";
+    public $shopDescription = "Описание магазина";
     const terminalType = "dynamical";
     const defaultPrice = 0;
 
+    /**
+     * @var RestClient
+     */
     private $restClient;
+    /**
+     * @var PaymentInfo
+     */
     private $paymentInfo;
+    /**
+     * @var TerminalInfo
+     */
     private $terminalInfo;
+    /**
+     * @var RefundInfo
+     */
     private $refundInfo;
 
-    public function init($login, $apiKey)
+    public $description;
+    public $customParameters;
+    public $failUrl;
+    public $successUrl;
+
+    public function __construct($login, $apiKey)
     {
-        if($this->terminalInfo == null)
-        {
-            $this->restClient = new RestClient($login, $apiKey);
+        $this->restClient = new RestClient($login, $apiKey);
+    }
 
-            $create_terminal = new CREATE_TERMINAL(self::shopName,self::terminalType);
+    public function setTerminal($id) {
+        $get_terminal = new GET_TERMINAL();
+        $get_terminal->id = $id;
 
-            $create_terminal->description = self::shopDescription;
-            $create_terminal->defaultPrice = self::defaultPrice;
+        $this->terminalInfo = $this->restClient->GetTerminal($get_terminal);
+    }
 
-            $this->restClient->CreateTerminal($create_terminal);
-        }
+    public function createTerminal($name) {
+        $create_terminal = new CREATE_TERMINAL($name);
+
+        $create_terminal->description = $this->shopDescription;
+        $create_terminal->defaultPrice = self::defaultPrice;
+
+        $this->terminalInfo = $this->restClient->CreateTerminal($create_terminal);
     }
 
     public function onPay(array $items, $amount)
     {
         $settings = new SETTINGS($this->terminalInfo->id);
+
+        if($this->failUrl != null and !empty($this->failUrl)) {
+            $settings->fail_url = $this->failUrl;
+        }
+
+        if($this->successUrl != null and !empty($this->successUrl)) {
+            $settings->success_url = $this->successUrl;
+        }
+
         $order = new ORDER($amount);
 
+        if($this->description != null and !empty($this->description)) {
+            $order->description = $this->description;
+        }
+
         $create_payment = new CREATE_PAYMENT($order, $settings,$items);
+
+        if($this->customParameters != null and !empty($this->customParameters)) {
+            $create_payment->custom_parameters = $this->customParameters;
+        }
+
         $this->paymentInfo = $this->restClient->CreatePayment($create_payment);
 
         if($this->paymentInfo == null or $this->paymentInfo->id == null)

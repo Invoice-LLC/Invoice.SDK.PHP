@@ -11,9 +11,4 @@ class GET_TERMINAL
      * @var string
      */
     public $id;
-
-    public function __construct($alias)
-    {
-        $this->alias = $alias;
-    }
 }

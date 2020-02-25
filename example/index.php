@@ -1,18 +1,25 @@
 <?php
 require_once "PseudoProcessing.php";
 
-$action = @$_GET['action'];
-
-if(!isset($action)) {
-    die();
+$action = @$_GET["action"];
+if($action == null or empty($action)) {
+    die("Не выбрано действие");
 }
 
-$processing = new PseudoProcessing();
+$processing = new PseudoProcessing("demo","1526fec01b5d11f4df4f2160627ce351");
 
-$processing->init("demo","1526fec01b5d11f4df4f2160627ce351");
+$processing->setTerminal("9ad01d262144a13cda1e90593bf64479");
+
+$processing->shopDescription = "Магазин бытовой техники";
+$processing->description = "Иванов Иван Иванович";
+$processing->failUrl = "https://google.com";
+$processing->successUrl = "https://google.com";
+
+$processing->customParameters = [
+    "phone" => "79992223343"
+];
 
 $item1 = new ITEM("Суп",10,2,20);
-
 $item2 = new ITEM("Кефир", 1000, 1, 990);
 $item2->discount = 10;
 
@@ -29,7 +36,7 @@ switch ($action) {
         {
             echo "Платеж оформлен: https://pay.invoice.su/P".$processing->getPayment()->id;
         } else {
-            echo "Ошибка платежа";
+            echo "Ошибка платежа ".$processing->getPayment()->error;
         }
         break;
     case "cancel":
@@ -55,7 +62,7 @@ switch ($action) {
         if($refund) {
             echo "Возврат оформлен";
         }else {
-            echo "Ошибка возврата";
+            echo "Ошибка возврата ".$processing->getRefund()->error;
         }
         break;
 

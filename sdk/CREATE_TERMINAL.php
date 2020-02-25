@@ -31,11 +31,9 @@ class CREATE_TERMINAL
     /**
      * CREATE_TERMINAL constructor.
      * @param $name string
-     * @param $type string
      */
-    public function __construct($name, $type)
+    public function __construct($name)
     {
         $this->name = $name;
-        $this->type = $type;
     }
 }
