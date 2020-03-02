@@ -10,6 +10,7 @@ class CREATE_PAYMENT
     /**
      * @var SETTINGS
      */
+
     public $settings;
     /**
      * @var array
@@ -19,6 +20,14 @@ class CREATE_PAYMENT
      * @var array(ITEM)
      */
     public $receipt;
+
+    /**
+     * Optional fields
+     * @var $mail string
+     * @var $phone string
+     */
+    public $mail;
+    public $phone;
 
     /**
      * CREATE_PAYMENT constructor.

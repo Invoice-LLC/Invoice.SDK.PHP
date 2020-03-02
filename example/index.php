@@ -30,6 +30,15 @@ $items = [
 
 switch ($action) {
     case "pay":
+        $phone = @$_GET["phone"];
+        $mail = @$_GET["mail"];
+        if($phone != null) {
+            $processing->phone = $phone;
+        }
+        if($mail != null) {
+            $processing->email = $mail;
+        }
+
         $pay = $processing->onPay($items, 2000);
 
         if($pay)

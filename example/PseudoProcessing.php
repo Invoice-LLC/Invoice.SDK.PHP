@@ -35,10 +35,16 @@ class PseudoProcessing
      */
     private $refundInfo;
 
+    /**
+     * Optional fields
+     */
     public $description;
     public $customParameters;
     public $failUrl;
     public $successUrl;
+    public $currency;
+    public $email;
+    public $phone;
 
     public function __construct($login, $apiKey)
     {
@@ -74,6 +80,7 @@ class PseudoProcessing
         }
 
         $order = new ORDER($amount);
+        $order->currency = $this->currency;
 
         if($this->description != null and !empty($this->description)) {
             $order->description = $this->description;
@@ -84,6 +91,9 @@ class PseudoProcessing
         if($this->customParameters != null and !empty($this->customParameters)) {
             $create_payment->custom_parameters = $this->customParameters;
         }
+
+        $create_payment->mail = $this->email;
+        $create_payment->phone = $this->phone;
 
         $this->paymentInfo = $this->restClient->CreatePayment($create_payment);
 
