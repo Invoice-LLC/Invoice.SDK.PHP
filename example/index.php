@@ -1,87 +1,73 @@
 <?php
 require_once "PseudoProcessing.php";
 
-$action = @$_GET["action"];
-if($action == null or empty($action)) {
-    die("Не выбрано действие");
-}
+$action = @$_GET["action"] ?? "pay";
+$orderId = @$_GET["action"] ?? "1235";
 
-$processing = new PseudoProcessing("demo","1526fec01b5d11f4df4f2160627ce351");
-
-$processing->setTerminal("9ad01d262144a13cda1e90593bf64479");
-
-$processing->shopDescription = "Магазин бытовой техники";
-$processing->description = "Иванов Иван Иванович";
-$processing->failUrl = "https://google.com";
-$processing->successUrl = "https://google.com";
-
-$processing->customParameters = [
-    "phone" => "79992223343"
+$shop = [
+    "id" => "28b839d026189922", // id магазина в системе
+    "name" => "Магазин игрушек" // Название магазина в системе
 ];
 
-$item1 = new ITEM("Суп",10,2,20);
-$item2 = new ITEM("Кефир", 1000, 1, 990);
-$item2->discount = 10;
+$customer = [
+    "name" => "Иван",
+    "phone" => "79991234567",
+    "email" => "em@invoice.su"
+];
+
+$processing = new PseudoProcessing(
+    "demo",
+    "1526fec01b5d11f4df4f2160627ce351",
+    $shop,
+    "https://invoice.su/",
+    "https://google.com/"
+);
 
 $items = [
-    $item1,
-    $item2
+    [
+        "name" => "Машинка",
+        "price" => 100,
+        "count" => 2,
+        "fullPrice" => 200
+    ],
+    [
+        "name" => "Робот",
+        "price" => 199,
+        "count" => 1,
+        "fullPrice" => 199
+    ]
 ];
 
 switch ($action) {
     case "pay":
-        $phone = @$_GET["phone"];
-        $mail = @$_GET["mail"];
-        if($phone != null) {
-            $processing->phone = $phone;
-        }
-        if($mail != null) {
-            $processing->email = $mail;
-        }
-
-        $pay = $processing->onPay($items, 2000);
-
-        if($pay)
-        {
-            echo "Платеж оформлен: https://pay.invoice.su/P".$processing->getPayment()->id;
-        } else {
-            echo "Ошибка платежа ".$processing->getPayment()->error;
-        }
+        if($processing->onPay($orderId, $items, $customer))
+            echo "Платеж оформлен: https://pay.invoice.su/P" . $processing->paymentInfo->id;
+        else
+            echo "Ошибка платежа " . $processing->paymentInfo->error;
         break;
+
     case "cancel":
-        if(empty($_GET['id']))
-            break;
-
-        $processing->onCancel($_GET['id']);
-        echo "Платеж отменен";
+        if ($processing->onCancel($orderId))
+            echo "Платеж отменен";
+        else
+            echo "Ошибка отмены платежа";
         break;
+
     case "status":
-        if(empty($_GET['id']))
-            break;
-
-        $status = $processing->getStatus($_GET['id']);
-        echo $status;
+        if ($processing->getStatus($orderId))
+            echo json_encode($processing->paymentInfo);
+        else
+            echo "Ошибка получения статуса";
         break;
-    case "refund":
-        if(empty($_GET['id']))
-            break;
 
-        $refund = $processing->onRefund($_GET['id'] ,$items, "Муха в супе",20);
+    case "refund":
+        unset($items[0]);
+        $refund = $processing->onRefund($orderId, $items, "Бракованный робот");
 
         if($refund) {
             echo "Возврат оформлен";
         }else {
-            echo "Ошибка возврата ".$processing->getRefund()->error;
+            echo "Ошибка возврата " . $processing->refundInfo->error;
         }
         break;
-
-    default:
-        echo $processing->getTerminal()->id;
-        echo "<br>";
-        echo $processing->getTerminal()->link;
-        break;
 }
-
-
-?>
-

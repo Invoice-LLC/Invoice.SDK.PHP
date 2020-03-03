@@ -12,7 +12,7 @@ class PaymentInfo
      */
     public $order;
     /**
-     * @var string{"created", "init", "process", "successful", "error"}
+     * @var string{"created", "init", "process", "successful", "error", "closed"}
      */
     public $status;
     /**
