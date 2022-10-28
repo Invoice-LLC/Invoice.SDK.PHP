@@ -4,17 +4,17 @@ class RestClient
 {
     public $url = "https://api.invoice.su/api/v2/";
 
-    public $login;
+    public $merchant_id;
     public $apiKey;
 
     /**
      * RestClient constructor.
-     * @param $login
+     * @param $merchant_id
      * @param $apiKey
      */
-    public function __construct($login, $apiKey)
+    public function __construct($merchant_id, $apiKey)
     {
-        $this->login = $login;
+        $this->merchant_id = $merchant_id;
         $this->apiKey = $apiKey;
     }
 
@@ -26,7 +26,7 @@ class RestClient
     private function Send($request_type, $json)
     {
         $request = $this->url . $request_type;
-        $auth = base64_encode($this->login . ":" . $this->apiKey);
+        $auth = base64_encode($this->merchant_id . ":" . $this->apiKey);
 
         $ch = curl_init($request);
         curl_setopt($ch, CURLOPT_URL, $request);

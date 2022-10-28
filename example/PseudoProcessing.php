@@ -39,13 +39,13 @@ class PseudoProcessing
     private $successUrl;
     private $currency;
 
-    public function __construct($login, $apiKey, $shop, $successUrl = null, $failUrl = null, $currency = null)
+    public function __construct($merchant_id, $apiKey, $shop, $successUrl = null, $failUrl = null, $currency = null)
     {
         $this->failUrl = $failUrl;
         $this->successUrl = $successUrl;
         $this->currency = $currency;
 
-        $this->restClient = new RestClient($login, $apiKey);
+        $this->restClient = new RestClient($merchant_id, $apiKey);
 
         // Пытаемся найти терминал в базе с alias==shop_id.
         // shop_id - любой уникальный неменяющейся индетефекатор в рамках этого юзера
