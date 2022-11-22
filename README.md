@@ -5,6 +5,16 @@
 
 [Более подробная информация по работе API](https://dev.invoice.su)
 
+API ключ и ID компании:
+
+![image](https://user-images.githubusercontent.com/91345275/198650619-cc0a590a-28ec-4d41-9496-35b16b2619e3.png)
+![image](https://user-images.githubusercontent.com/91345275/198650678-0ee56d2c-2485-4195-acdc-0faff9c966fc.png)
+
+ID терминала:
+
+![image](https://user-images.githubusercontent.com/91345275/198652040-8746e362-139b-46f4-a97b-135f63b42b4c.png)
+![image](https://user-images.githubusercontent.com/91345275/198652082-96cdf363-d15a-4c09-bfb0-c098f67dd28f.png)
+
 Создание терминала
 ```php
 <?php
@@ -13,10 +23,10 @@ include "sdk/CREATE_TERMINAL.php";
 
 $name = "Название магазина";
 $description = "Описание магазина";
-$login = "demo"; //Логин от lk.invoice.su
+$merchant_id = "c24360cfac0a0c40c518405f6bc68cb0"; // ID компании
 $api_key = "1526fec01b5d11f4df4f2160627ce351"; // API ключ
 
-$restClient = new RestClient($login, $api_key);
+$restClient = new RestClient($merchant_id, $api_key);
 
 $create_terminal = new CREATE_TERMINAL($name);
 $create_terminal->description = $description;
@@ -39,11 +49,11 @@ include "sdk/common/ORDER.php";
 include "sdk/common/ITEM.php";
 include "sdk/common/SETTINGS.php";
 
-$login = "demo"; //Логин от lk.invoice.su
+$merchant_id = "c24360cfac0a0c40c518405f6bc68cb0"; // ID компании
 $api_key = "1526fec01b5d11f4df4f2160627ce351"; // API ключ
 $terminalId = "9ad01d262144a13cda1e90593bf64479"; //ID терминала, в котором будет создаваться платеж
 
-$restClient = new RestClient($login, $api_key);
+$restClient = new RestClient($merchant_id, $api_key);
 
 $amount = 1000; // Общая сумма заказа
 
@@ -78,11 +88,11 @@ include "sdk/RestClient.php";
 include "sdk/CREATE_REFUND.php";
 include "sdk/common/REFUND_INFO.php";
 
-$login = "demo"; //Логин от lk.invoice.su
+$merchant_id = "c24360cfac0a0c40c518405f6bc68cb0"; // ID компании
 $api_key = "1526fec01b5d11f4df4f2160627ce351"; // API ключ
 $paymentId = "126d4c806ef04b10f822541f1a5b41d9"; // ID платежа
 
-$restClient = new RestClient($login, $api_key);
+$restClient = new RestClient($merchant_id, $api_key);
 
 $amountRefund = 40; // Сумма возврата
 $reason = "В супе нашли муху"; // Причина возврата
