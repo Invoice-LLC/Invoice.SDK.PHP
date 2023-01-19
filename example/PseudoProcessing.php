@@ -80,7 +80,7 @@ class PseudoProcessing
 
         $order = new ORDER($amount);
         $order->currency = $this->currency;
-        $order->id = $orderId;
+        $order->id = "$orderId" . "-" . bin2hex(random_bytes(5));
         $order->description = "Заказ №" . strval($orderId);
 
         $settings = new SETTINGS($this->terminalInfo->id);

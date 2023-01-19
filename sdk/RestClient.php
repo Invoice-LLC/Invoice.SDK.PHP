@@ -37,7 +37,7 @@ class RestClient
             "Host: api.invoice.su",
             "content-type: application/json",
             "Authorization: Basic ".$auth,
-            "User-Agent: curl/7.55.1",
+            "User-Agent: Invoice.PHP",
             "Accept: */*"
         ]);
 
