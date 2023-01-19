@@ -123,7 +123,7 @@ $signature = $notification["signature"]; // Сигнатура из тела з�
 $paymentId = $notification["id"]; // ID платежа
 $status = $notification["status"]; // Статус платежа(successful|error)
 $notification_type = $notification["notification_type"]; // Тип уведомления(pay|refund)
-$orderId = $notification["order"]["id"]; // ID заказа, который мы передали при создании платежа
+$orderId = strstr($notification["order"]["id"], "-", true);; // ID заказа, который мы передали при создании платежа
 $orderAmount = $notification["order"]["amount"]; // Сумма заказа
 $currency = $notification["order"]["currency"]; // Валюта заказа
 
